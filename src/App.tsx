@@ -11,7 +11,7 @@ import PageNotFound from './pages/PageNotFound';
 import Users from './pages/Users';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
-import AppLayout from './ui/AppLayout';
+import AppLayout from './ui/layouts/AppLayout';
 
 function App() {
   return (
