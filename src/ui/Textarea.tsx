@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const Textarea = styled.textarea`
   padding: 0.8rem 1.2rem;
@@ -6,8 +6,12 @@ const Textarea = styled.textarea`
   border-radius: 5px;
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-sm);
-  width: 100%;
+  width: 0;
+  min-width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   height: 8rem;
+  resize: vertical;
 `;
 
 export default Textarea;
