@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components';
 
 const sizes = {
   small: css`
@@ -47,3 +47,31 @@ const variations = {
     }
   `,
 };
+
+// 1. Define types for variation and size matching your object keys
+type ButtonVariation = 'primary' | 'secondary' | 'danger'; // Add all your variation keys
+type ButtonSize = 'small' | 'medium' | 'large';
+
+// 2. Define your component props interface
+interface ButtonProps {
+  variation?: ButtonVariation;
+  size?: ButtonSize;
+}
+
+// 3. Pass the interface to styled.button
+const Button = styled.button<ButtonProps>`
+  border: none;
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-sm);
+
+  ${(props) => sizes[props.size || 'medium']}
+  ${(props) => variations[props.variation || 'primary']}
+`;
+
+// 4. defaultProps will now work cleanly
+Button.defaultProps = {
+  variation: 'primary',
+  size: 'medium',
+};
+
+export default Button;
