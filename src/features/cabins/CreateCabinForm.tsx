@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCabin } from '../../services/apiCabins';
 import toast from 'react-hot-toast';
 import FormRow from '../../ui/FormRow';
+import { type CabinFormData } from '../../services/apiCabins';
 
 function CreateCabinForm() {
   const queryClient = useQueryClient();
@@ -22,10 +23,12 @@ function CreateCabinForm() {
     onError: (err) => toast.error(err.message),
   });
 
-  const { register, handleSubmit, reset, getValues, formState } = useForm();
+  const { register, handleSubmit, reset, getValues, formState } =
+    useForm<CabinFormData>();
   const { errors } = formState;
 
-  function onSubmit(data: object) {
+  function onSubmit(data: CabinFormData) {
+    // mutate({ ...data, image: data.image[0] });
     mutate(data);
   }
 
@@ -85,9 +88,15 @@ function CreateCabinForm() {
           defaultValue={0}
           {...register('discount', {
             required: 'This field is required',
-            validate: (value) =>
-              value < getValues().regularPrice ||
-              'The discount should be less than the regulare price',
+            validate: (value) => {
+              console.log('Discount value:', value);
+              console.log('Regular price:', getValues().regularPrice);
+
+              return (
+                Number(value) <= Number(getValues().regularPrice) ||
+                'The discount should be less than the regular price'
+              );
+            },
           })}
         />
       </FormRow>
