@@ -1,12 +1,5 @@
 import styled from 'styled-components';
 import { formatCurrency } from '../../utils/helpers';
-import {
-  useMutation,
-  useQueryClient,
-  type UseMutateFunction,
-} from '@tanstack/react-query';
-import { deleteCabin } from '../../services/apiCabins';
-import toast from 'react-hot-toast';
 import { useState } from 'react';
 import CreateCabinForm from './CreateCabinForm';
 import { useDeleteCabin } from './useDeleteCabin';
@@ -64,6 +57,7 @@ interface CabinRowProps {
 
 function CabinRow({ cabin }: CabinRowProps) {
   const [showForm, setShowForm] = useState(false);
+  const { isDeleting, deleteCabin } = useDeleteCabin();
 
   const {
     id: cabinId,
@@ -73,8 +67,6 @@ function CabinRow({ cabin }: CabinRowProps) {
     discount,
     image,
   } = cabin;
-
-  const { isDeleting, deleteCabin } = useDeleteCabin();
 
   return (
     <>
