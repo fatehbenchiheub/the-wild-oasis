@@ -5,16 +5,35 @@ import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createCabin } from '../../services/apiCabins';
+import { createEditCabin } from '../../services/apiCabins';
 import toast from 'react-hot-toast';
 import FormRow from '../../ui/FormRow';
 import { type CabinFormData } from '../../services/apiCabins';
 
-function CreateCabinForm() {
+type CabinEditProp = {
+  cabinToEdit: {
+    id: number;
+    name: string;
+    maxCapacity: number;
+    regularPrice: number;
+    discount: number;
+    description: string;
+  };
+};
+
+function CreateCabinForm({ cabinToEdit }: CabinEditProp) {
+  const { id: editId, ...editValues } = cabinToEdit;
+  const isEditSession = Boolean(editId);
+
+  const { register, handleSubmit, reset, getValues, formState } =
+    useForm<CabinFormData>({
+      defaultValues: isEditSession ? editValues : {},
+    });
+
   const queryClient = useQueryClient();
 
   const { mutate, isPending: isCreating } = useMutation({
-    mutationFn: createCabin,
+    mutationFn: createEditCabin,
     onSuccess: () => {
       toast.success('New cabine created successfuly!');
       queryClient.invalidateQueries({ queryKey: ['cabins'] });
@@ -23,8 +42,6 @@ function CreateCabinForm() {
     onError: (err) => toast.error(err.message),
   });
 
-  const { register, handleSubmit, reset, getValues, formState } =
-    useForm<CabinFormData>();
   const { errors } = formState;
 
   function onSubmit(data: CabinFormData) {
@@ -116,7 +133,13 @@ function CreateCabinForm() {
       </FormRow>
 
       <FormRow label="cabin image" error={errors?.image?.message as string}>
-        <FileInput id="image" accept="image/*" {...register('image')} />
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register('image', {
+            required: isEditSession ? false : 'uploading image is required',
+          })}
+        />
       </FormRow>
 
       <FormRow>

@@ -20,7 +20,7 @@ export type CabinFormData = {
   image: FileList; // FileInput outputs a FileList
 };
 
-export async function createCabin(newCabin: CabinFormData) {
+export async function createEditCabin(newCabin: CabinFormData, id: number) {
   const imageName = `${Math.random()}-${newCabin.image[0].name}`.replaceAll(
     '/',
     ''
