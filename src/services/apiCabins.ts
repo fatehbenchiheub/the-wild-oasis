@@ -51,6 +51,7 @@ export async function createEditCabin(newCabin: CabinFormData, id?: number) {
   }
 
   const { data, error } = await query.select().single();
+  // console.log(data);
   if (error) throw new Error('Cabin could not be created or updated');
 
   // 4. Upload to storage ONLY if it's a brand new file upload
