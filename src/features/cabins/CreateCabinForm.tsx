@@ -28,7 +28,7 @@ function CreateCabinForm({ cabinToEdit }: CabinEditProp) {
   const { createCabin, isCreating } = useCreateCabin();
   const { editCabin, isEditing } = useEditCabin(editId as number);
 
-  const { register, handleSubmit, getValues, formState } =
+  const { register, handleSubmit, reset, getValues, formState } =
     useForm<CabinFormData>({
       defaultValues: isEditSession ? editValues : {},
     });
@@ -37,9 +37,13 @@ function CreateCabinForm({ cabinToEdit }: CabinEditProp) {
 
   function onSubmit(data: CabinFormData) {
     if (isEditSession) {
-      editCabin(data);
+      editCabin(data, {
+        onSuccess: () => reset(),
+      });
     } else {
-      createCabin(data);
+      createCabin(data, {
+        onSuccess: () => reset(),
+      });
     }
   }
 
