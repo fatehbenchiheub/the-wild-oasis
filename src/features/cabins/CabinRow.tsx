@@ -60,7 +60,14 @@ interface CabinRowProps {
 function CabinRow({ cabin }: CabinRowProps) {
   const [showForm, setShowForm] = useState(false);
 
-  const { id: cabinId, maxCapacity, regularPrice, discount, image } = cabin;
+  const {
+    id: cabinId,
+    name,
+    maxCapacity,
+    regularPrice,
+    discount,
+    image,
+  } = cabin;
 
   const queryClient = useQueryClient();
 
@@ -80,6 +87,7 @@ function CabinRow({ cabin }: CabinRowProps) {
       <TableRow role="row">
         <Img src={image} />
         <Cabin>{cabinId}</Cabin>
+
         <div>Fits up to {maxCapacity} guests</div>
         <Price>{formatCurrency(regularPrice)}</Price>
         <Discount>{formatCurrency(discount)}</Discount>
