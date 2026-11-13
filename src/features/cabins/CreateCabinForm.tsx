@@ -19,10 +19,10 @@ type CabinEditProp = {
     description: string;
     image: string;
   };
-  onClose: () => void;
+  onCloseModal: () => void;
 };
 
-function CreateCabinForm({ cabinToEdit, onClose }: CabinEditProp) {
+function CreateCabinForm({ cabinToEdit, onCloseModal }: CabinEditProp) {
   const { id: editId, ...editValues } = cabinToEdit ?? {};
   const isEditSession = Boolean(editId);
 
@@ -39,14 +39,18 @@ function CreateCabinForm({ cabinToEdit, onClose }: CabinEditProp) {
   function onSubmit(data: CabinFormData) {
     if (isEditSession) {
       editCabin(data, {
-        onSuccess: () => reset(),
+        onSuccess: () => {
+          reset();
+          onCloseModal?.();
+        },
       });
-      onClose();
     } else {
       createCabin(data, {
-        onSuccess: () => reset(),
+        onSuccess: () => {
+          reset();
+          onCloseModal?.();
+        },
       });
-      onClose();
     }
   }
 
@@ -129,7 +133,11 @@ function CreateCabinForm({ cabinToEdit, onClose }: CabinEditProp) {
 
       <FormRow>
         <>
-          <Button onClick={onClose} variation="secondary" type="reset">
+          <Button
+            onClick={() => onCloseModal?.()}
+            variation="secondary"
+            type="reset"
+          >
             Cancel
           </Button>
           <Button disabled={isCreating || isEditing}>
