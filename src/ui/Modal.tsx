@@ -1,4 +1,11 @@
-import { cloneElement, createContext, useContext, useState } from 'react';
+import {
+  cloneElement,
+  createContext,
+  useContext,
+  useState,
+  type ReactNode,
+  type ReactElement,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { HiXMark } from 'react-icons/hi2';
 import styled from 'styled-components';
@@ -45,26 +52,28 @@ const Button = styled.button`
   & svg {
     width: 2.4rem;
     height: 2.4rem;
-    /* Sometimes we need both */
-    /* fill: var(--color-grey-500);
-    stroke: var(--color-grey-500); */
     color: var(--color-grey-500);
   }
 `;
 
-const ModalContext = createContext();
+// 1. Define the shape of our Context
+interface ModalContextType {
+  openName: string;
+  open: (name: string) => void;
+  close: () => void;
+}
 
-type ModalFormType = {
-  children: React.ReactNode;
-  onClose?: () => void;
-  // Accepts strings, numbers, elements, fragments, etc.
-};
+const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
-function Modal({ children }) {
-  const [openName, setOpenName] = useState('');
+interface ModalProps {
+  children: ReactNode;
+}
+
+function Modal({ children }: ModalProps) {
+  const [openName, setOpenName] = useState<string>('');
 
   const close = () => setOpenName('');
-  const open = setOpenName;
+  const open = (name: string) => setOpenName(name);
 
   return (
     <ModalContext.Provider value={{ openName, open, close }}>
@@ -73,24 +82,43 @@ function Modal({ children }) {
   );
 }
 
-function Open({ children, opens: opensWindowName }) {
-  const { open } = useContext(ModalContext);
-
-  return cloneElement(children, { onClick: () => open(opensWindowName) });
+interface OpenProps {
+  children: ReactElement<{ onClick?: (e: React.MouseEvent) => void }>;
+  opens: string;
 }
 
-function Window({ children, name }) {
-  const { openName, close } = useContext(ModalContext);
+function Open({ children, opens: opensWindowName }: OpenProps) {
+  const context = useContext(ModalContext);
+  if (!context) throw new Error('Open must be used within a Modal');
+  const { open } = context;
+
+  return cloneElement(children, {
+    onClick: (e: React.MouseEvent) => {
+      children.props.onClick?.(e); // Preserve existing onClick if any
+      open(opensWindowName);
+    },
+  });
+}
+
+interface WindowProps {
+  children: ReactElement<{ onCloseModal?: () => void }>;
+  name: string;
+}
+
+function Window({ children, name }: WindowProps) {
+  const context = useContext(ModalContext);
+  if (!context) throw new Error('Window must be used within a Modal');
+  const { openName, close } = context;
 
   if (name !== openName) return null;
 
   return createPortal(
-    <Overlay>
-      <StyledModal>
+    <Overlay onClick={close}>
+      <StyledModal onClick={(e) => e.stopPropagation()}>
         <Button onClick={close}>
           <HiXMark />
         </Button>
-        <div>{children}</div>
+        <div>{cloneElement(children, { onCloseModal: close })}</div>
       </StyledModal>
     </Overlay>,
     document.body
@@ -99,26 +127,5 @@ function Window({ children, name }) {
 
 Modal.Open = Open;
 Modal.Window = Window;
-
-/*
-  type ModalFormType = {
-  children: React.ReactNode;
-  onClose?: () => void;
-  // Accepts strings, numbers, elements, fragments, etc.
-};
-
-  function Modal({ children, onClose }: ModalFormType) {
-  return createPortal(
-    <Overlay>
-      <StyledModal>
-        <Button onClick={onClose}>
-          <HiXMark />
-        </Button>
-        <div>{children}</div>
-      </StyledModal>
-    </Overlay>,
-    document.body
-  );
-} */
 
 export default Modal;
