@@ -19,7 +19,7 @@ type CabinEditProp = {
     description: string;
     image: string;
   };
-  onCloseModal: () => void;
+  onCloseModal?: () => void;
 };
 
 function CreateCabinForm({ cabinToEdit, onCloseModal }: CabinEditProp) {
@@ -59,7 +59,10 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }: CabinEditProp) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Fofrm
+      onSubmit={handleSubmit(onSubmit, onError)}
+      type={onCloseModal ? 'modal' : 'regular'}
+    >
       <FormRow label="cabin name" error={errors?.name?.message as string}>
         <Input
           type="text"

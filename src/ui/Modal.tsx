@@ -52,7 +52,7 @@ const Button = styled.button`
 
 type ModalFormType = {
   children: React.ReactNode;
-  onClose: () => void;
+  onClose?: () => void;
   // Accepts strings, numbers, elements, fragments, etc.
 };
 
