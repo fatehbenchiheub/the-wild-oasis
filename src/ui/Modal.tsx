@@ -1,3 +1,4 @@
+import { cloneElement, createContext, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { HiXMark } from 'react-icons/hi2';
 import styled from 'styled-components';
@@ -51,13 +52,62 @@ const Button = styled.button`
   }
 `;
 
+const ModalContext = createContext();
+
 type ModalFormType = {
   children: React.ReactNode;
   onClose?: () => void;
   // Accepts strings, numbers, elements, fragments, etc.
 };
 
-function Modal({ children, onClose }: ModalFormType) {
+function Modal({ children }) {
+  const [openName, setOpenName] = useState('');
+
+  const close = () => setOpenName('');
+  const open = setOpenName;
+
+  return (
+    <ModalContext.Provider value={{ openName, open, close }}>
+      {children}
+    </ModalContext.Provider>
+  );
+}
+
+function Open({ children, opens: opensWindowName }) {
+  const { open } = useContext(ModalContext);
+
+  return cloneElement(children, { onClick: () => open(opensWindowName) });
+}
+
+function Window({ children, name }) {
+  const { openName, close } = useContext(ModalContext);
+
+  if (name !== openName) return null;
+
+  return createPortal(
+    <Overlay>
+      <StyledModal>
+        <Button onClick={close}>
+          <HiXMark />
+        </Button>
+        <div>{children}</div>
+      </StyledModal>
+    </Overlay>,
+    document.body
+  );
+}
+
+Modal.Open = Open;
+Modal.Window = Window;
+
+/*
+  type ModalFormType = {
+  children: React.ReactNode;
+  onClose?: () => void;
+  // Accepts strings, numbers, elements, fragments, etc.
+};
+
+  function Modal({ children, onClose }: ModalFormType) {
   return createPortal(
     <Overlay>
       <StyledModal>
@@ -69,6 +119,6 @@ function Modal({ children, onClose }: ModalFormType) {
     </Overlay>,
     document.body
   );
-}
+} */
 
 export default Modal;
