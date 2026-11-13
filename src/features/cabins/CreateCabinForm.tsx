@@ -59,7 +59,7 @@ function CreateCabinForm({ cabinToEdit, onCloseModal }: CabinEditProp) {
   }
 
   return (
-    <Fofrm
+    <Form
       onSubmit={handleSubmit(onSubmit, onError)}
       type={onCloseModal ? 'modal' : 'regular'}
     >
