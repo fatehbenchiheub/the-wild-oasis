@@ -5,12 +5,11 @@ import {
   useState,
   type ReactNode,
   type ReactElement,
-  useEffect,
-  useRef,
 } from 'react';
 import { createPortal } from 'react-dom';
 import { HiXMark } from 'react-icons/hi2';
 import styled from 'styled-components';
+import useOutsideClick from '../hooks/useOutsideClick';
 
 const StyledModal = styled.div`
   position: fixed;
@@ -113,20 +112,7 @@ function Window({ children, name }: WindowProps) {
   if (!context) throw new Error('Window must be used within a Modal');
   const { openName, close } = context;
 
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(
-    function () {
-      function handleClick(e: MouseEvent) {
-        if (ref.current && !ref.current.contains(e.target as Node)) close();
-      }
-
-      document.addEventListener('click', handleClick);
-
-      return () => document.removeEventListener('click', handleClick);
-    },
-    [close]
-  );
+  const ref = useOutsideClick(close);
 
   if (name !== openName) return null;
 
