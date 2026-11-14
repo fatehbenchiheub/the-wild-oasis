@@ -111,12 +111,12 @@ function Window({ children, name }: WindowProps) {
   const context = useContext(ModalContext);
   if (!context) throw new Error('Window must be used within a Modal');
   const { openName, close } = context;
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(
     function () {
-      function handleClick(e: ReactElement) {
-        if (ref.current && !ref.current.contain(e.target)) close();
+      function handleClick(e: MouseEvent) {
+        if (ref.current && !ref.current.contains(e.target as Node)) close();
       }
 
       document.addEventListener('click', handleClick);
