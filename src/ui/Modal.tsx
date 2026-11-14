@@ -96,6 +96,7 @@ function Open({ children, opens: opensWindowName }: OpenProps) {
 
   return cloneElement(children, {
     onClick: (e: React.MouseEvent) => {
+      e.stopPropagation();
       children.props.onClick?.(e); // Preserve existing onClick if any
       open(opensWindowName);
     },
@@ -111,6 +112,7 @@ function Window({ children, name }: WindowProps) {
   const context = useContext(ModalContext);
   if (!context) throw new Error('Window must be used within a Modal');
   const { openName, close } = context;
+
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(
@@ -129,7 +131,7 @@ function Window({ children, name }: WindowProps) {
   if (name !== openName) return null;
 
   return createPortal(
-    <Overlay onClick={close}>
+    <Overlay /*onClick={close}*/>
       <StyledModal onClick={(e) => e.stopPropagation()} ref={ref}>
         <Button onClick={close}>
           <HiXMark />
