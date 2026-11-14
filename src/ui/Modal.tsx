@@ -5,6 +5,8 @@ import {
   useState,
   type ReactNode,
   type ReactElement,
+  useEffect,
+  useRef,
 } from 'react';
 import { createPortal } from 'react-dom';
 import { HiXMark } from 'react-icons/hi2';
@@ -109,12 +111,26 @@ function Window({ children, name }: WindowProps) {
   const context = useContext(ModalContext);
   if (!context) throw new Error('Window must be used within a Modal');
   const { openName, close } = context;
+  const ref = useRef();
+
+  useEffect(
+    function () {
+      function handleClick(e: ReactElement) {
+        if (ref.current && !ref.current.contain(e.target)) close();
+      }
+
+      document.addEventListener('click', handleClick);
+
+      return () => document.removeEventListener('click', handleClick);
+    },
+    [close]
+  );
 
   if (name !== openName) return null;
 
   return createPortal(
     <Overlay onClick={close}>
-      <StyledModal onClick={(e) => e.stopPropagation()}>
+      <StyledModal onClick={(e) => e.stopPropagation()} ref={ref}>
         <Button onClick={close}>
           <HiXMark />
         </Button>
