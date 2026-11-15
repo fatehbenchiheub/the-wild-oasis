@@ -172,12 +172,16 @@ function List({ id, children }: ListProp) {
 type ButtonProp = {
   children: string;
   onClick?: () => void;
+  icon: ReactElement;
 };
 
-function Button({ children, onClick }: ButtonProp) {
+function Button({ children, onClick, icon }: ButtonProp) {
   return (
     <li>
-      <StyledButton onClick={onClick}>{children}</StyledButton>
+      <StyledButton onClick={onClick}>
+        {icon}
+        <span>{children}</span>
+      </StyledButton>
     </li>
   );
 }
