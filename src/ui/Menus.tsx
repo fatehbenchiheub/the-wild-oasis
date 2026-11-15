@@ -113,7 +113,18 @@ function Toggle({ id }: ToggleProp) {
   if (!context) throw new Error('Toggle must be used within a Modal');
   const { openId, open, close } = context;
 
-  function handleClick(e: React.MouseEvent) {
+  function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
+    if (e.target instanceof Element) {
+      const button = e.target.closest('button');
+
+      // 2- another direct solution by adding: ?
+      // const rect = e.target.closest('button')?.getBoundingClientRect();
+
+      if (button) {
+        const rect = button.getBoundingClientRect();
+        // Use button safely here
+      }
+    }
     e.stopPropagation();
     if (openId === '' || Number(openId) !== id) {
       // children.props.onClick?.(e);
