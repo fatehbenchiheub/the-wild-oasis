@@ -96,7 +96,7 @@ function Open({ children, opens: opensWindowName }: OpenProps) {
 
   return cloneElement(children, {
     onClick: (e: React.MouseEvent) => {
-      e.stopPropagation();
+      // e.stopPropagation();
       children.props.onClick?.(e); // Preserve existing onClick if any
       open(opensWindowName);
     },
