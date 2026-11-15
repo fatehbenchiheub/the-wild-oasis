@@ -7,6 +7,7 @@ import { useCreateCabin } from './useCreateCabin';
 import { type CabinFormData } from '../../services/apiCabins';
 import Modal from '../../ui/Modal';
 import ConfirmDelete from '../../ui/ConfirmDelete';
+import Menus from '../../ui/Menus';
 
 const TableRow = styled.div`
   display: grid;
@@ -112,6 +113,17 @@ function CabinRow({ cabin }: CabinRowProps) {
             />
           </Modal.Window>
         </Modal>
+
+        <Menus.Menu>
+          <Menus.Toggle id={cabin.id} />
+
+          <Menu.List id={cabin.id}>
+            <Menu.Button>Duplicate</Menu.Button>
+            <Menu.Button>Edit</Menu.Button>
+
+            <Menu.Button>Delete</Menu.Button>
+          </Menu.List>
+        </Menus.Menu>
       </div>
     </TableRow>
   );

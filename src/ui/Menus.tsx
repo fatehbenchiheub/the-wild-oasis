@@ -1,8 +1,8 @@
-import { Type } from 'lucide-react';
-import type { ReactElement } from 'react';
+// import { Type } from 'lucide-react';
+import { createContext, useState, type ReactElement } from 'react';
 import styled from 'styled-components';
 
-const StyledMenu = styled.div`
+const Menu = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -67,8 +67,28 @@ type ChildrenMenuProp = {
   children: ReactElement;
 };
 
+const MenusContext = createContext();
+
 function Menus({ children }: ChildrenMenuProp) {
-  return <div>{children}</div>;
+  const [openId, setIsOpenId] = useState('');
+
+  const close = () => setIsOpenId('');
+  const open = () => (name: string) => setIsOpenId(name);
+
+  return (
+    <MenusContext.Provider value={{ openId, open, close }}>
+      {children}
+    </MenusContext.Provider>
+  );
 }
+
+function Toggle({ id }: number) {}
+function List({ id }: number) {}
+function Button({ children }) {}
+
+Menus.Menu = Menu;
+Menus.Toggle = Toggle;
+Menu.List = List;
+Menu.Button = Button;
 
 export default Menus;
