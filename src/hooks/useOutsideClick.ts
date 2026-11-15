@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
 
-function useOutsideClick(closeHandler: () => void) {
-  const ref = useRef<HTMLDivElement>(null);
+function useOutsideClick<T extends HTMLElement = HTMLDivElement>(
+  closeHandler: () => void
+) {
+  const ref = useRef<T>(null);
 
   useEffect(
     function () {
@@ -10,9 +12,9 @@ function useOutsideClick(closeHandler: () => void) {
           closeHandler();
       }
 
-      document.addEventListener('click', handleClick);
+      document.addEventListener('click', handleClick, true);
 
-      return () => document.removeEventListener('click', handleClick);
+      return () => document.removeEventListener('click', handleClick, true);
     },
     [closeHandler]
   );

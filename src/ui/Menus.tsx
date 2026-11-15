@@ -6,8 +6,10 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { HiEllipsisHorizontal, HiEllipsisVertical } from 'react-icons/hi2';
+import { createPortal } from 'react-dom';
+import { HiEllipsisVertical } from 'react-icons/hi2';
 import styled from 'styled-components';
+import useOutsideClick from '../hooks/useOutsideClick';
 
 const Menu = styled.div`
   display: flex;
@@ -34,7 +36,12 @@ const StyledToggle = styled.button`
   }
 `;
 
-const StyledList = styled.ul`
+type PositionPropType = {
+  x: number;
+  y: number;
+};
+
+const StyledList = styled.ul<{ position: PositionPropType }>`
   position: fixed;
 
   background-color: var(--color-grey-0);
@@ -86,7 +93,7 @@ function Menus({ children }: ChildrenMenuProp) {
   const [openId, setIsOpenId] = useState<string>('');
 
   const close = () => setIsOpenId('');
-  const open = () => (name: string) => setIsOpenId(name);
+  const open = (name: string) => setIsOpenId(name);
 
   return (
     <MenusContext.Provider value={{ openId, open, close }}>
@@ -96,16 +103,20 @@ function Menus({ children }: ChildrenMenuProp) {
 }
 
 type ToggleProp = {
+  //children: ReactElement<{ onClick?: (e: React.MouseEvent) => void }>;
+  //children: ReactElement;
   id: number;
 };
 
 function Toggle({ id }: ToggleProp) {
   const context = useContext(MenusContext);
-  if (!context) throw new Error('Open must be used within a Modal');
+  if (!context) throw new Error('Toggle must be used within a Modal');
   const { openId, open, close } = context;
 
-  function handleClick() {
+  function handleClick(e: React.MouseEvent) {
+    e.stopPropagation();
     if (openId === '' || Number(openId) !== id) {
+      // children.props.onClick?.(e);
       open(String(id));
     } else {
       close();
@@ -117,7 +128,28 @@ function Toggle({ id }: ToggleProp) {
     </StyledToggle>
   );
 }
-function List({ id }: number) {}
+
+type ListProp = {
+  children: ReactNode;
+  id: number;
+};
+function List({ id, children }: ListProp) {
+  const context = useContext(MenusContext);
+  if (!context) throw new Error('List must be used within a Modal');
+  const { openId, close } = context;
+
+  // 1. Hook up useOutsideClick, passing close function
+  const ref = useOutsideClick<HTMLUListElement>(close);
+  if (Number(openId) !== id) return null;
+
+  return createPortal(
+    // 2. Attach the ref to the StyledList container
+    <StyledList position={{ x: 20, y: 20 }} ref={ref}>
+      {children}
+    </StyledList>,
+    document.body
+  );
+}
 
 type ButtonProp = {
   children: string;
@@ -132,7 +164,7 @@ function Button({ children }: ButtonProp) {
 
 Menus.Menu = Menu;
 Menus.Toggle = Toggle;
-Menu.List = List;
-Menu.Button = Button;
+Menus.List = List;
+Menus.Button = Button;
 
 export default Menus;

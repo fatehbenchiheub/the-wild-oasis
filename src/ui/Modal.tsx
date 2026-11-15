@@ -58,13 +58,14 @@ const Button = styled.button`
 `;
 
 // 1. Define the shape of our Context
+
+const ModalContext = createContext<ModalContextType | undefined>(undefined);
+
 interface ModalContextType {
   openName: string;
   open: (name: string) => void;
   close: () => void;
 }
-
-const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 interface ModalProps {
   children: ReactNode;
@@ -112,7 +113,7 @@ function Window({ children, name }: WindowProps) {
   if (!context) throw new Error('Window must be used within a Modal');
   const { openName, close } = context;
 
-  const ref = useOutsideClick(close);
+  const ref = useOutsideClick<HTMLDivElement>(close);
 
   if (name !== openName) return null;
 
