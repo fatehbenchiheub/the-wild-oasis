@@ -1,5 +1,12 @@
 // import { Type } from 'lucide-react';
-import { createContext, useState, type ReactElement } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
+import { HiEllipsisHorizontal, HiEllipsisVertical } from 'react-icons/hi2';
 import styled from 'styled-components';
 
 const Menu = styled.div`
@@ -63,14 +70,20 @@ const StyledButton = styled.button`
   }
 `;
 
+interface MenusContextType {
+  openId: string;
+  open: (name: string) => void;
+  close: () => void;
+}
+
+const MenusContext = createContext<MenusContextType | undefined>(undefined);
+
 type ChildrenMenuProp = {
   children: ReactElement;
 };
 
-const MenusContext = createContext();
-
 function Menus({ children }: ChildrenMenuProp) {
-  const [openId, setIsOpenId] = useState('');
+  const [openId, setIsOpenId] = useState<string>('');
 
   const close = () => setIsOpenId('');
   const open = () => (name: string) => setIsOpenId(name);
@@ -82,9 +95,40 @@ function Menus({ children }: ChildrenMenuProp) {
   );
 }
 
-function Toggle({ id }: number) {}
+type ToggleProp = {
+  id: number;
+};
+
+function Toggle({ id }: ToggleProp) {
+  const context = useContext(MenusContext);
+  if (!context) throw new Error('Open must be used within a Modal');
+  const { openId, open, close } = context;
+
+  function handleClick() {
+    if (openId === '' || Number(openId) !== id) {
+      open(String(id));
+    } else {
+      close();
+    }
+  }
+  return (
+    <StyledToggle onClick={handleClick}>
+      <HiEllipsisVertical />
+    </StyledToggle>
+  );
+}
 function List({ id }: number) {}
-function Button({ children }) {}
+
+type ButtonProp = {
+  children: string;
+};
+function Button({ children }: ButtonProp) {
+  return (
+    <li>
+      <StyledButton>{children}</StyledButton>
+    </li>
+  );
+}
 
 Menus.Menu = Menu;
 Menus.Toggle = Toggle;
