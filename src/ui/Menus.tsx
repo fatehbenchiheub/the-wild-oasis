@@ -176,9 +176,18 @@ type ButtonProp = {
 };
 
 function Button({ children, onClick, icon }: ButtonProp) {
+  const context = useContext(MenusContext);
+  if (!context) throw new Error('Button must be used within a Menus component');
+  const { close } = context;
+
+  function handleClick() {
+    onClick?.();
+    close();
+  }
+
   return (
     <li>
-      <StyledButton onClick={onClick}>
+      <StyledButton onClick={handleClick}>
         {icon}
         <span>{children}</span>
       </StyledButton>
