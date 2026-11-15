@@ -1,4 +1,6 @@
-import styled from "styled-components";
+import { Type } from 'lucide-react';
+import type { ReactElement } from 'react';
+import styled from 'styled-components';
 
 const StyledMenu = styled.div`
   display: flex;
@@ -60,3 +62,13 @@ const StyledButton = styled.button`
     transition: all 0.3s;
   }
 `;
+
+type ChildrenMenuProp = {
+  children: ReactElement;
+};
+
+function Menus({ children }: ChildrenMenuProp) {
+  return <div>{children}</div>;
+}
+
+export default Menus;
