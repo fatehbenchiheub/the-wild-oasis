@@ -62,7 +62,7 @@ interface CabinRowProps {
 
 function CabinRow({ cabin }: CabinRowProps) {
   const { isDeleting, deleteCabin } = useDeleteCabin();
-  const { isCreating, createCabin } = useCreateCabin();
+  const { /*isCreating*/ createCabin } = useCreateCabin();
 
   const { id, name, maxCapacity, regularPrice, discount, description, image } =
     cabin;
