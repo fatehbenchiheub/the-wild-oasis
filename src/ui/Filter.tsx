@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components';
 
 const StyledFilter = styled.div`
   border: 1px solid var(--color-grey-100);
@@ -33,3 +33,15 @@ const FilterButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
+
+function Filter() {
+  return (
+    <StyledFilter>
+      <FilterButton>All</FilterButton>
+      <FilterButton>No Discount</FilterButton>
+      <FilterButton>With Discount</FilterButton>
+    </StyledFilter>
+  );
+}
+
+export default Filter;
