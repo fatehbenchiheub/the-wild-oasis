@@ -39,10 +39,10 @@ function CabinTable() {
 
   let filteredCabins;
   if (filterValue === 'all') filteredCabins = cabins;
-  if (filterValue === 'no-discount')
+  if (filterValue === 'No-discount')
     filteredCabins = cabins?.filter((cabin) => cabin.discount === 0);
-  if (filterValue === 'with-discount')
-    filteredCabins = cabins?.filter((cabin) => cabin.discount !== 0);
+  if (filterValue === 'With-discount')
+    filteredCabins = cabins?.filter((cabin) => cabin.discount > 0);
   return (
     <Menus>
       <Table role="table">
@@ -54,8 +54,8 @@ function CabinTable() {
           <div>Discount</div>
           <div>Action</div>
         </TableHeader>
-        {cabins?.map((cabin) => (
-          <CabinRow cabin={cabin} key={cabin.id} />
+        {filteredCabins?.map((filteredCabins) => (
+          <CabinRow cabin={filteredCabins} key={filteredCabins.id} />
         ))}
       </Table>
     </Menus>

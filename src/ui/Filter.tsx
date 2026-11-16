@@ -11,7 +11,7 @@ const StyledFilter = styled.div`
   gap: 0.4rem;
 `;
 
-const FilterButton = styled.button`
+const FilterButton = styled.button<{ active?: string; onclick?: () => void }>`
   background-color: var(--color-grey-0);
   border: none;
 
