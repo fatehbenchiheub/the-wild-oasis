@@ -5,7 +5,7 @@ function CabinTableOperations() {
   return (
     <TableOperations>
       <Filter
-        filterOptions="discount"
+        filterField="discount"
         options={[
           {
             value: 'all',
