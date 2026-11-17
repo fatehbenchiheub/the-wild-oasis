@@ -3,11 +3,19 @@ import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
 import { type Booking } from '../bookings/BookingDataBox';
 import Empty from '../../ui/Empty';
+import { useBookings } from './useBookings';
+import Spinner from '../../ui/Spinner';
 
 function BookingTable() {
-  const bookings: Booking[] = [];
+  const { isPending, bookings /*error*/ } = useBookings();
 
-  if (!bookings.length) return <Empty resourceName="bookings" />;
+  if (isPending) return <Spinner />;
+
+  if (!bookings?.length) return <Empty resourceName="bookings" />;
+
+  {
+    console.log(bookings);
+  }
 
   return (
     <Menus>

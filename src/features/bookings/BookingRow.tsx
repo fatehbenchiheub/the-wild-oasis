@@ -45,42 +45,32 @@ const statusToTagName: Record<string, 'blue' | 'green' | 'silver'> = {
   'checked-out': 'silver',
 };
 
-function BookingRow({
-  booking: {
-    startDate,
-    endDate,
-    numNights,
-    totalPrice,
-    status,
-    guests: { fullName: guestName, email },
-    cabins: { name: cabinName },
-  },
-}: BookingRowProps) {
+function BookingRow({ booking }: BookingRowProps) {
   return (
     <Table.Row>
-      <Cabin>{cabinName}</Cabin>
+      <Cabin>{booking.id}</Cabin>
 
       <Stacked>
-        <span>{guestName}</span>
-        <span>{email}</span>
+        <span>{/*booking.guests.fullName*/}</span>
+        <span>{/*booking.guests.email*/}</span>
       </Stacked>
 
       <Stacked>
         <span>
-          {isToday(new Date(startDate))
+          {isToday(new Date(booking.startDate))
             ? 'Today'
-            : formatDistanceFromNow(startDate)}{' '}
-          &rarr; {numNights} night stay
+            : formatDistanceFromNow(booking.startDate)}{' '}
+          &rarr; {booking.numNights} night stay
         </span>
         <span>
-          {format(new Date(startDate), 'MMM dd yyyy')} &mdash;{' '}
-          {format(new Date(endDate), 'MMM dd yyyy')}
+          {format(new Date(booking.startDate), 'MMM dd yyyy')} &mdash;{' '}
+          {format(new Date(booking.endDate), 'MMM dd yyyy')}
         </span>
       </Stacked>
 
       <Tag type={statusToTagName[status]}>{status.replace('-', ' ')}</Tag>
 
-      <Amount>{formatCurrency(totalPrice)}</Amount>
+      <Amount>{formatCurrency(booking.totalPrice)}</Amount>
     </Table.Row>
   );
 }
