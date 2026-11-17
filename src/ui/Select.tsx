@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { type OptionItem } from './SortBy';
 
 const StyledSelect = styled.select<{ type: string }>`
   font-size: 1.4rem;
@@ -13,3 +14,24 @@ const StyledSelect = styled.select<{ type: string }>`
   font-weight: 500;
   box-shadow: var(--shadow-sm);
 `;
+
+type SelectPropType = {
+  options: OptionItem[];
+  value: string;
+  type: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement, Element>) => void;
+};
+
+function Select({ options, value, type, onChange }: SelectPropType) {
+  return (
+    <StyledSelect value={value} onChange={onChange} type={type}>
+      {options.map((option) => (
+        <option value={option.value} key={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </StyledSelect>
+  );
+}
+
+export default Select;
