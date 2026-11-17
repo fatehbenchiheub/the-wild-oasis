@@ -5,8 +5,7 @@ import Tag from '../../ui/Tag';
 import Table from '../../ui/Table';
 import { type Booking } from './BookingDataBox';
 
-import { formatCurrency } from '../../utils/helpers';
-import { formatDistanceFromNow } from '../../utils/helpers';
+import { formatCurrency, formatDistanceFromNow } from '../../utils/helpers';
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -46,31 +45,50 @@ const statusToTagName: Record<string, 'blue' | 'green' | 'silver'> = {
 };
 
 function BookingRow({ booking }: BookingRowProps) {
+  // Safely extract properties with fallback values to prevent crashes
+  const {
+    startDate,
+    endDate,
+    numNights,
+    totalPrice,
+    status = 'unconfirmed',
+    guests,
+    cabins,
+  } = booking || {};
+
+  const guestName = guests?.fullName || 'Unknown Guest';
+  const email = guests?.email || '';
+  const cabinName = cabins?.name || 'Unknown Cabin';
+
   return (
     <Table.Row>
-      <Cabin>{booking.id}</Cabin>
+      <Cabin>{cabinName}</Cabin>
 
       <Stacked>
-        <span>{/*booking.guests.fullName*/}</span>
-        <span>{/*booking.guests.email*/}</span>
+        <span>{guestName}</span>
+        <span>{email}</span>
       </Stacked>
 
       <Stacked>
         <span>
-          {isToday(new Date(booking.startDate))
+          {startDate && isToday(new Date(startDate))
             ? 'Today'
-            : formatDistanceFromNow(booking.startDate)}{' '}
-          &rarr; {booking.numNights} night stay
+            : startDate
+              ? formatDistanceFromNow(startDate)
+              : ''}{' '}
+          &rarr; {numNights ?? 0} night stay
         </span>
         <span>
-          {format(new Date(booking.startDate), 'MMM dd yyyy')} &mdash;{' '}
-          {format(new Date(booking.endDate), 'MMM dd yyyy')}
+          {startDate ? format(new Date(startDate), 'MMM dd yyyy') : ''} &mdash;{' '}
+          {endDate ? format(new Date(endDate), 'MMM dd yyyy') : ''}
         </span>
       </Stacked>
 
-      <Tag type={statusToTagName[status]}>{status.replace('-', ' ')}</Tag>
+      <Tag type={statusToTagName[status] || 'silver'}>
+        {status ? status.replace('-', ' ') : 'Unknown'}
+      </Tag>
 
-      <Amount>{formatCurrency(booking.totalPrice)}</Amount>
+      <Amount>{formatCurrency(totalPrice ?? 0)}</Amount>
     </Table.Row>
   );
 }
