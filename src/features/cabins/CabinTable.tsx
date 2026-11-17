@@ -4,6 +4,7 @@ import CabinRow from './CabinRow';
 import { useCabins } from './useCabins';
 import Menus from '../../ui/Menus';
 import { useSearchParams } from 'react-router-dom';
+import Empty from '../../ui/Empty';
 
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -59,6 +60,9 @@ function CabinTable() {
     if (aValue > bValue) return 1 * modifier;
     return 0;
   });
+
+  if (!sortedCabins?.length) return <Empty resourceName="Cabins" />;
+
   return (
     <Menus>
       <Table role="table">

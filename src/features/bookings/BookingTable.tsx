@@ -2,9 +2,12 @@ import BookingRow from './BookingRow';
 import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
 import { type Booking } from '../bookings/BookingDataBox';
+import Empty from '../../ui/Empty';
 
 function BookingTable() {
   const bookings: Booking[] = [];
+
+  if (!bookings.length) return <Empty resourceName="bookings" />;
 
   return (
     <Menus>
