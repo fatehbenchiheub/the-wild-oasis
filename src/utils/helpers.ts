@@ -15,7 +15,7 @@ export const subtractDates = (
  * Includes a safety shield to prevent undefined/null crashes on initial load.
  */
 export const formatDistanceFromNow = (dateStr: string): string => {
-  if (!dateStr) return ''; // <--- THE SHIELD: Stops undefined crashes instantly!
+  if (!dateStr) return '';
 
   try {
     return formatDistance(parseISO(dateStr), new Date(), {
@@ -24,6 +24,7 @@ export const formatDistanceFromNow = (dateStr: string): string => {
       .replace('about ', '')
       .replace('in', 'In');
   } catch (error) {
+    console.error('Failed to parse date:', error); // <-- Used the error!
     return '';
   }
 };
