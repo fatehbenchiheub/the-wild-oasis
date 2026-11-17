@@ -11,7 +11,7 @@ const StyledFilter = styled.div`
   gap: 0.4rem;
 `;
 
-const FilterButton = styled.button<{ active?: string; onclick?: () => void }>`
+const FilterButton = styled.button<{ active?: boolean; onclick?: () => void }>`
   background-color: var(--color-grey-0);
   border: none;
 
@@ -40,15 +40,16 @@ type OptionsType = {
   label: string;
 };
 type FilterPropType = {
-  filterOptions: string;
+  filterField: string;
   options: OptionsType[];
 };
 
-function Filter({ filterOptions, options }: FilterPropType) {
+function Filter({ filterField, options }: FilterPropType) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentFilter = searchParams.get(filterField) || options.at(0)?.value;
 
   function handleClick(value: string) {
-    searchParams.set(filterOptions, value);
+    searchParams.set(filterField, value);
     setSearchParams(searchParams);
   }
 
@@ -58,6 +59,7 @@ function Filter({ filterOptions, options }: FilterPropType) {
         <FilterButton
           key={option.value}
           onClick={() => handleClick(option.value)}
+          active={currentFilter === option.value}
         >
           {option.label}
         </FilterButton>
