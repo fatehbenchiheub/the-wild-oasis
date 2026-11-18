@@ -6,18 +6,29 @@ type FilterType = {
   value: string;
 };
 
-type GetBookingsParam = {
-  filter: FilterType | null;
+type SortType = {
+  field: string;
+  direction: string;
 };
 
-export async function getBookings({ filter }: GetBookingsParam) {
+type GetBookingsParam = {
+  filter: FilterType | null;
+  sortBy: SortType;
+};
+
+export async function getBookings({ filter, sortBy }: GetBookingsParam) {
   let query = supabase
     .from('bookings')
     .select('*, cabins(name), guests(fullName, email)');
 
   // Filter conditionally
-  if (filter !== null) query = query.eq(filter.field, filter.value);
+  if (filter) query = query.eq(filter.field, filter.value);
 
+  // Sort
+  if (sortBy)
+    query = query.order(sortBy.field, {
+      ascending: sortBy.direction === 'asc',
+    });
   const { data, error } = await query;
 
   if (error) {
