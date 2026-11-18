@@ -19,7 +19,7 @@ type GetBookingsParam = {
 export async function getBookings({ filter, sortBy }: GetBookingsParam) {
   let query = supabase
     .from('bookings')
-    .select('*, cabins(name), guests(fullName, email)');
+    .select('*, cabins(name), guests(fullName, email)', { count: 'exact' });
 
   // Filter conditionally
   if (filter) query = query.eq(filter.field, filter.value);
@@ -29,13 +29,13 @@ export async function getBookings({ filter, sortBy }: GetBookingsParam) {
     query = query.order(sortBy.field, {
       ascending: sortBy.direction === 'asc',
     });
-  const { data, error } = await query;
+  const { data, error, count } = await query;
 
   if (error) {
     console.error(error);
     throw new Error('bookings could not be loaded!');
   }
-  return data;
+  return { data, count };
 }
 
 export async function getBooking(id: number) {

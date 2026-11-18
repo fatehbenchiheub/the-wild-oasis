@@ -59,7 +59,7 @@ const PaginationButton = styled.button<{ active?: string }>`
 `;
 
 type CountProp = {
-  count: number;
+  count: number | undefined | null;
 };
 
 const PAGE_SIZE = 10;
@@ -71,7 +71,7 @@ function Pagination({ count }: CountProp) {
     ? 1
     : Number(searchParams.get('page'));
 
-  const pageCount = Math.ceil(count / PAGE_SIZE);
+  const pageCount = Math.ceil(count! / PAGE_SIZE);
 
   function nexPage() {
     const next = currentPage === pageCount ? currentPage : currentPage + 1;
