@@ -18,6 +18,8 @@ function Sidebar() {
     <StyledSidebar>
       <Logo />
       <MainNav />
+
+      <Uploade
     </StyledSidebar>
   );
 }
