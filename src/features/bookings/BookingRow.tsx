@@ -6,6 +6,9 @@ import Table from '../../ui/Table';
 import { type Booking } from './BookingDataBox';
 
 import { formatCurrency, formatDistanceFromNow } from '../../utils/helpers';
+import Menus from '../../ui/Menus';
+import { HiEye } from 'react-icons/hi2';
+import { useNavigate } from 'react-router-dom';
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -45,8 +48,10 @@ const statusToTagName: Record<string, 'blue' | 'green' | 'silver'> = {
 };
 
 function BookingRow({ booking }: BookingRowProps) {
+  const navigate = useNavigate();
   // Safely extract properties with fallback values to prevent crashes
   const {
+    id: bookingId,
     startDate,
     endDate,
     numNights,
@@ -89,6 +94,18 @@ function BookingRow({ booking }: BookingRowProps) {
       </Tag>
 
       <Amount>{formatCurrency(totalPrice ?? 0)}</Amount>
+
+      <Menus.Menu>
+        <Menus.Toggle id={bookingId} />
+        <Menus.List id={bookingId}>
+          <Menus.Button
+            icon={<HiEye />}
+            onClick={() => navigate(`/bookings/${bookingId}`)}
+          >
+            See details
+          </Menus.Button>
+        </Menus.List>
+      </Menus.Menu>
     </Table.Row>
   );
 }

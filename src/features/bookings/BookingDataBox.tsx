@@ -25,7 +25,7 @@ export interface Cabin {
 }
 
 export interface Booking {
-  id?: number | string;
+  id: number;
   created_at: string;
   startDate: string;
   endDate: string;
