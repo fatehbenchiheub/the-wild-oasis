@@ -146,7 +146,7 @@ export function Uploader() {
       </Button>
       <p>Only run this only once!</p>
       <p>
-        <em>(Cabin images need to be uploaded manually)</em>
+        <em>{/*(Cabin images need to be uploaded manually)*/}</em>
       </p>
       <hr />
       <Button onClick={uploadBookings} disabled={isLoading}>
