@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import Checkbox from '../../ui/Checkbox';
 import { formatCurrency } from '../../utils/helpers';
 import useChecking from './useChecking';
+import { useSettings } from '../settings/useSettings';
 
 const Box = styled.div`
   /* Box */
@@ -25,14 +26,16 @@ const Box = styled.div`
 
 function CheckinBooking() {
   const [confirmPaid, setConfirmPaid] = useState(false);
+  const [addBreakfast, setAddBreakfast] = useState(false);
 
   const moveBack = useMoveBack();
   const { booking, isPending } = useBooking();
   const { checking, isCheckingIn } = useChecking();
+  const { settings, isPending: isLoadingSettings } = useSettings();
 
   useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking]);
 
-  if (isPending) return <Spinner />;
+  if (isPending || isLoadingSettings) return <Spinner />;
   if (!booking) return <p>Booking not found.</p>;
 
   const {
@@ -43,6 +46,10 @@ function CheckinBooking() {
     hasBreakfast,
     numNights,
   } = booking;
+
+  const optionalBreakfastPrice = Number(
+    settings?.breakfastPrice * numNights * numGuests
+  );
 
   function handleCheckin() {
     if (!confirmPaid) return;
@@ -58,6 +65,25 @@ function CheckinBooking() {
 
       <BookingDataBox booking={booking} />
 
+      {!hasBreakfast && (
+        <Box>
+          <Checkbox
+            checked={addBreakfast}
+            onChange={() => {
+              setAddBreakfast((add) => !add);
+              setConfirmPaid(false);
+            }}
+            id="breakfast"
+            disabled={addBreakfast}
+          >
+            Want to add breakfast price of (
+            {formatCurrency(settings.breakfastPrice)}) to your Booking price of
+            ({formatCurrency(totalPrice)})? (total:{' '}
+            {formatCurrency(optionalBreakfastPrice)})
+          </Checkbox>
+        </Box>
+      )}
+
       <Box>
         <Checkbox
           checked={confirmPaid}
@@ -66,7 +92,11 @@ function CheckinBooking() {
           disabled={confirmPaid || isCheckingIn}
         >
           I confirm that {guests.fullName} has paid the total amount of{' '}
-          {formatCurrency(totalPrice)}
+          {!addBreakfast
+            ? formatCurrency(totalPrice)
+            : `${formatCurrency(
+                totalPrice + optionalBreakfastPrice
+              )} (${formatCurrency(totalPrice)} + ${formatCurrency(optionalBreakfastPrice)})`}
         </Checkbox>
       </Box>
 
