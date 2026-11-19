@@ -115,12 +115,20 @@ export async function getStaysTodayActivity() {
   }
   return data;
 }
+type UpdateParam = {
+  bookingId: number;
+  payload: {
+    status: string;
+    isPaid: boolean;
+  };
+};
 
-export async function updateBooking(id: number, obj: object) {
+export async function updateBooking({ bookingId, payload }: UpdateParam) {
+  const { status, isPaid } = payload;
   const { data, error } = await supabase
     .from('bookings')
-    .update(obj)
-    .eq('id', id)
+    .update(payload)
+    .eq('id', bookingId)
     .select()
     .single();
 
