@@ -67,9 +67,11 @@ function BookingDetail() {
             Check out
           </Button>
         )}
-        <Button variation="secondary" onClick={moveBack}>
-          Back
-        </Button>
+        {/*
+          <Button variation="secondary" onClick={moveBack}>
+            Back
+          </Button>
+        */}
       </ButtonGroup>
     </>
   );
