@@ -147,13 +147,23 @@ export async function updateBooking({ bookingId, payload }: UpdateParam) {
 }
 
 export async function deleteBooking(id: number) {
-  // REMEMBER RLS POLICIES
-  const { data, error } = await supabase.from('bookings').delete().eq('id', id);
+  const { data, error } = await supabase
+    .from('bookings')
+    .delete()
+    .eq('id', id)
+    .select(); // ← returns the deleted rows
 
-  console.log(data);
   if (error) {
     console.error(error);
     throw new Error('Booking could not be deleted');
   }
-  return data;
+
+  // RLS blocks return { data: [], error: null } — no error thrown by Supabase
+  if (!data || data.length === 0) {
+    throw new Error(
+      'Booking could not be deleted — check your RLS DELETE policy on the bookings table'
+    );
+  }
+
+  return data[0];
 }
