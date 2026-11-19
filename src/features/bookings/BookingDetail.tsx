@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import BookingDataBox, { type Booking } from './BookingDataBox';
+import BookingDataBox from './BookingDataBox';
 import Row from '../../ui/Row';
 import Heading from '../../ui/Heading';
 import Tag from '../../ui/Tag';
@@ -9,6 +9,8 @@ import Button from '../../ui/Button';
 import ButtonText from '../../ui/ButtonText';
 
 import { useMoveBack } from '../../hooks/useMoveBack';
+import { useBooking } from './useBooking';
+import Spinner from '../../ui/Spinner';
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -23,19 +25,23 @@ const statusToTagName: Record<string, 'blue' | 'green' | 'silver'> = {
 };
 
 function BookingDetail() {
-  const booking = {} as Booking;
-  const status: keyof typeof statusToTagName = 'checked-in';
-
+  const { booking, isPending } = useBooking();
   const moveBack = useMoveBack();
+
+  if (isPending) return <Spinner />;
+  if (!booking) return <p>Booking not found.</p>;
+
+  const { status, id: bookingId } = booking;
+  const tagColor = statusToTagName[status] ?? 'silver';
 
   return (
     <>
       <Row type="horizontal">
         <HeadingGroup>
-          <Heading as="h1">Booking #X</Heading>
-          <Tag type={statusToTagName[status]}>{status.replace('-', ' ')}</Tag>
+          <Heading as="h1">Booking #{bookingId}</Heading>
+          <Tag type={tagColor}>{status.replace('-', ' ')}</Tag>
         </HeadingGroup>
-        <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
+        <ButtonText onClick={moveBack}>← Back</ButtonText>
       </Row>
 
       <BookingDataBox booking={booking} />

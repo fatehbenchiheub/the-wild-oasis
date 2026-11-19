@@ -12,40 +12,6 @@ import { Flag } from '../../ui/Flag';
 
 import { formatDistanceFromNow, formatCurrency } from '../../utils/helpers';
 
-export interface Guest {
-  fullName: string;
-  email: string;
-  country: string;
-  countryFlag?: string;
-  nationalID: string;
-}
-
-export interface Cabin {
-  name: string;
-}
-
-export interface Booking {
-  id: number;
-  created_at: string;
-  startDate: string;
-  endDate: string;
-  numNights: number;
-  numGuests: number;
-  cabinPrice: number;
-  extrasPrice: number;
-  totalPrice: number;
-  hasBreakfast: boolean;
-  observations?: string | null;
-  isPaid: boolean;
-  status: 'unconfirmed' | 'checked-in' | 'checked-out';
-  guests: Guest;
-  cabins: Cabin;
-}
-
-interface BookingDataBoxProps {
-  booking: Booking;
-}
-
 const StyledBookingDataBox = styled.section`
   background-color: var(--color-grey-0);
   border: 1px solid var(--color-grey-100);
@@ -132,6 +98,39 @@ const Footer = styled.footer`
   color: var(--color-grey-500);
   text-align: right;
 `;
+
+export interface Guest {
+  fullName: string;
+  email: string;
+  country: string;
+  countryFlag?: string;
+  nationalID: string;
+}
+
+export interface Cabin {
+  name: string;
+}
+export interface Booking {
+  id: number;
+  created_at: string;
+  startDate: string;
+  endDate: string;
+  numNights: number;
+  numGuests: number;
+  cabinPrice: number;
+  extrasPrice: number;
+  totalPrice: number;
+  hasBreakfast: boolean;
+  observations?: string | null;
+  isPaid: boolean;
+  status: 'unconfirmed' | 'checked-in' | 'checked-out';
+  guests: Guest;
+  cabins: Cabin;
+}
+
+interface BookingDataBoxProps {
+  booking: Booking;
+}
 
 function BookingDataBox({ booking }: BookingDataBoxProps) {
   const {
