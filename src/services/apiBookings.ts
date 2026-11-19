@@ -115,19 +115,26 @@ export async function getStaysTodayActivity() {
   }
   return data;
 }
+// This type MUST mirror what .update() accepts (ideally generated from Supabase).
+export type BookingUpdatePayload = {
+  status: string;
+  isPaid: boolean;
+  hasBreakfast?: boolean;
+  extrasPrice?: number;
+  totalPrice?: number;
+};
+
 type UpdateParam = {
   bookingId: number;
-  payload: {
-    status: string;
-    isPaid: boolean;
-  };
+  payload: BookingUpdatePayload;
 };
 
 export async function updateBooking({ bookingId, payload }: UpdateParam) {
-  const { status, isPaid } = payload;
+  console.log(payload, bookingId);
+
   const { data, error } = await supabase
     .from('bookings')
-    .update(payload)
+    .update(payload) // ← payload is now guaranteed to be DB-shaped
     .eq('id', bookingId)
     .select()
     .single();

@@ -13,8 +13,8 @@ import Spinner from '../../ui/Spinner';
 import { useEffect, useState } from 'react';
 import Checkbox from '../../ui/Checkbox';
 import { formatCurrency } from '../../utils/helpers';
-import useChecking from './useChecking';
 import { useSettings } from '../settings/useSettings';
+import useCheckin from './useCheckin';
 
 const Box = styled.div`
   /* Box */
@@ -30,7 +30,7 @@ function CheckinBooking() {
 
   const moveBack = useMoveBack();
   const { booking, isPending } = useBooking();
-  const { checking, isCheckingIn } = useChecking();
+  const { checkin, isCheckinIn } = useCheckin();
   const { settings, isPending: isLoadingSettings } = useSettings();
 
   useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking]);
@@ -53,7 +53,19 @@ function CheckinBooking() {
 
   function handleCheckin() {
     if (!confirmPaid) return;
-    checking(bookingId);
+
+    if (addBreakfast) {
+      checkin({
+        bookingId,
+        breakfast: {
+          hasBreakfast: true,
+          extrasPrice: optionalBreakfastPrice,
+          totalPrice: totalPrice + optionalBreakfastPrice,
+        },
+      });
+    } else {
+      checkin({ bookingId });
+    }
   }
 
   return (
@@ -89,7 +101,7 @@ function CheckinBooking() {
           checked={confirmPaid}
           onChange={() => setConfirmPaid((confirm) => !confirm)}
           id="confirm"
-          disabled={confirmPaid || isCheckingIn}
+          disabled={confirmPaid || isCheckinIn}
         >
           I confirm that {guests.fullName} has paid the total amount of{' '}
           {!addBreakfast
@@ -101,7 +113,7 @@ function CheckinBooking() {
       </Box>
 
       <ButtonGroup>
-        <Button onClick={handleCheckin} disabled={!confirmPaid || isCheckingIn}>
+        <Button onClick={handleCheckin} disabled={!confirmPaid || isCheckinIn}>
           Check in booking #{bookingId}
         </Button>
         <Button variation="secondary" onClick={moveBack}>
