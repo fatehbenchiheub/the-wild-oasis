@@ -33,7 +33,7 @@ function CheckinBooking() {
   const { checkin, isCheckinIn } = useCheckin();
   const { settings, isPending: isLoadingSettings } = useSettings();
 
-  useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking]);
+  useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking?.isPaid]);
 
   if (isPending || isLoadingSettings) return <Spinner />;
   if (!booking) return <p>Booking not found.</p>;
@@ -46,6 +46,8 @@ function CheckinBooking() {
     hasBreakfast,
     numNights,
   } = booking;
+
+  console.log(hasBreakfast);
 
   const optionalBreakfastPrice = Number(
     settings?.breakfastPrice * numNights * numGuests
