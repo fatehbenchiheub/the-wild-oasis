@@ -118,7 +118,7 @@ export async function getStaysTodayActivity() {
 // This type MUST mirror what .update() accepts (ideally generated from Supabase).
 export type BookingUpdatePayload = {
   status: string;
-  isPaid: boolean;
+  isPaid?: boolean;
   hasBreakfast?: boolean;
   extrasPrice?: number;
   totalPrice?: number;

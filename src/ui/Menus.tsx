@@ -173,9 +173,10 @@ type ButtonProp = {
   children: string;
   onClick?: () => void;
   icon: ReactElement;
+  disabled?: boolean;
 };
 
-function Button({ children, onClick, icon }: ButtonProp) {
+function Button({ children, onClick, icon, disabled }: ButtonProp) {
   const context = useContext(MenusContext);
   if (!context) throw new Error('Button must be used within a Menus component');
   const { close } = context;
@@ -187,7 +188,7 @@ function Button({ children, onClick, icon }: ButtonProp) {
 
   return (
     <li>
-      <StyledButton onClick={handleClick}>
+      <StyledButton onClick={handleClick} disabled={disabled}>
         {icon}
         <span>{children}</span>
       </StyledButton>
