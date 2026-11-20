@@ -14,7 +14,7 @@ export function useLogin() {
   const { mutate: login, isPending } = useMutation({
     mutationFn: ({ email, password }: LoginQueryType) =>
       loginApi({ email, password }),
-    onSuccess: (user) => {
+    onSuccess: () => {
       navigate('/dashboard');
     },
     onError: (err) => {
