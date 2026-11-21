@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import UpdateUserDataForm from '../features/authentication/UpdateUserDataForm';
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
+import UpdatePasswordForm from '../features/authentication/UpdatePasswordForm';
 
 const StyledAccount = styled.div`
   max-width: 72rem;
@@ -36,7 +37,7 @@ function Account() {
 
       <StyledRow>
         <Heading as="h3">Update password</Heading>
-        <p>Update user password form</p>
+        <UpdatePasswordForm />
       </StyledRow>
     </StyledAccount>
   );
