@@ -3,15 +3,23 @@ import Button from '../../ui/Button';
 import Form from '../../ui/Form';
 import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
+import { useSignup } from './useSignup';
+import { type SignupType } from '../../services/apiAuth';
 
 // Email regex: /\S+@\S+\.\S+/
 
 function SignupForm() {
-  const { register, formState, getValues, handleSubmit } = useForm();
+  const { register, formState, getValues, handleSubmit, reset } =
+    useForm<SignupFormFields>();
   const { errors } = formState;
+  const { signup, isPending } = useSignup();
 
-  function onSubmit(data) {
-    console.log(data);
+  interface SignupFormFields extends SignupType {
+    passwordConfirm: string;
+  }
+
+  function onSubmit({ fullName, email, password }: SignupType) {
+    signup({ fullName, email, password }, { onSettled: () => reset() });
   }
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
