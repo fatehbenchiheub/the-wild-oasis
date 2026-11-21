@@ -5,6 +5,7 @@ import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
 import { useSignup } from './useSignup';
 import { type SignupType } from '../../services/apiAuth';
+import SpinnerMini from '../../ui/SpinnerMini';
 
 // Email regex: /\S+@\S+\.\S+/
 
@@ -28,6 +29,7 @@ function SignupForm() {
           type="text"
           id="fullName"
           {...register('fullName', { required: 'This field is required' })}
+          disabled={isPending}
         />
       </FormRow>
 
@@ -42,6 +44,7 @@ function SignupForm() {
               message: 'Please provide a valid email address!',
             },
           })}
+          disabled={isPending}
         />
       </FormRow>
 
@@ -59,6 +62,7 @@ function SignupForm() {
               message: 'Password needs a minimum of 8 characters!',
             },
           })}
+          disabled={isPending}
         />
       </FormRow>
 
@@ -72,16 +76,19 @@ function SignupForm() {
               value === getValues().password ||
               'Password confirm does not match password',
           })}
+          disabled={isPending}
         />
       </FormRow>
 
       <FormRow>
         {/* type is an HTML attribute! */}
         <>
-          <Button variation="secondary" type="reset">
+          <Button variation="secondary" type="reset" disabled={isPending}>
             Cancel
           </Button>
-          <Button>Create new user</Button>
+          <Button disabled={isPending}>
+            {!isPending ? 'Create new user' : <SpinnerMini />}
+          </Button>
         </>
       </FormRow>
     </Form>
