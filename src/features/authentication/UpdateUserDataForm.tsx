@@ -8,6 +8,8 @@ import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
 
 import { useUser } from './useUser';
+import { useUpdateUser } from './useUpdateUser';
+import SpinnerMini from '../../ui/SpinnerMini';
 
 const Actions = styled.div`
   display: flex;
@@ -16,6 +18,7 @@ const Actions = styled.div`
 `;
 
 function UpdateUserDataForm() {
+  const { updateUser, isUpdating } = useUpdateUser();
   const {
     user: {
       email,
@@ -28,6 +31,13 @@ function UpdateUserDataForm() {
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!fullName) return;
+    updateUser({ fullName, avatar }, { onSuccess: () => setAvatar(null) });
+  }
+
+  function handleCancel() {
+    setFullName(currentFullName ?? '');
+    setAvatar(null);
   }
 
   return (
@@ -35,6 +45,7 @@ function UpdateUserDataForm() {
       <FormRow label="Email address">
         <Input value={email} disabled />
       </FormRow>
+
       <FormRow label="Full name">
         <Input
           type="text"
@@ -43,10 +54,13 @@ function UpdateUserDataForm() {
             setFullName(e.target.value)
           }
           id="fullName"
+          disabled={isUpdating}
         />
       </FormRow>
+
       <FormRow label="Avatar image">
         <FileInput
+          key={avatar ? 'has-avatar' : 'empty'} // clears browser input
           id="avatar"
           accept="image/*"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -54,12 +68,20 @@ function UpdateUserDataForm() {
           }
         />
       </FormRow>
+
       <FormRow>
         <Actions>
-          <Button type="reset" variation="secondary">
+          <Button
+            type="button"
+            variation="secondary"
+            disabled={isUpdating}
+            onClick={handleCancel}
+          >
             Cancel
           </Button>
-          <Button>Update account</Button>
+          <Button disabled={isUpdating}>
+            {!isUpdating ? 'Update account' : <SpinnerMini />}
+          </Button>
         </Actions>
       </FormRow>
     </Form>
