@@ -1,15 +1,21 @@
-import { useState } from "react";
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import styled from 'styled-components';
 
-import Button from "../../ui/Button";
-import FileInput from "../../ui/FileInput";
-import Form from "../../ui/Form";
-import FormRow from "../../ui/FormRow";
-import Input from "../../ui/Input";
+import Button from '../../ui/Button';
+import FileInput from '../../ui/FileInput';
+import Form from '../../ui/Form';
+import FormRow from '../../ui/FormRow';
+import Input from '../../ui/Input';
 
-import { useUser } from "./useUser";
+import { useUser } from './useUser';
+
+const Actions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.2rem;
+`;
 
 function UpdateUserDataForm() {
-  // We don't need the loading state, and can immediately use the user data, because we know that it has already been loaded at this point
   const {
     user: {
       email,
@@ -17,10 +23,10 @@ function UpdateUserDataForm() {
     },
   } = useUser();
 
-  const [fullName, setFullName] = useState(currentFullName);
-  const [avatar, setAvatar] = useState(null);
+  const [fullName, setFullName] = useState<string>(currentFullName ?? '');
+  const [avatar, setAvatar] = useState<File | null>(null);
 
-  function handleSubmit(e) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
   }
 
@@ -33,7 +39,9 @@ function UpdateUserDataForm() {
         <Input
           type="text"
           value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setFullName(e.target.value)
+          }
           id="fullName"
         />
       </FormRow>
@@ -41,14 +49,18 @@ function UpdateUserDataForm() {
         <FileInput
           id="avatar"
           accept="image/*"
-          onChange={(e) => setAvatar(e.target.files[0])}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setAvatar(e.target.files?.[0] ?? null)
+          }
         />
       </FormRow>
       <FormRow>
-        <Button type="reset" variation="secondary">
-          Cancel
-        </Button>
-        <Button>Update account</Button>
+        <Actions>
+          <Button type="reset" variation="secondary">
+            Cancel
+          </Button>
+          <Button>Update account</Button>
+        </Actions>
       </FormRow>
     </Form>
   );
