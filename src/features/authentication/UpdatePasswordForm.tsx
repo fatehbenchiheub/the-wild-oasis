@@ -14,20 +14,26 @@ const Actions = styled.div`
   gap: 1.2rem;
 `;
 
+interface PasswordFormInputs {
+  password: string;
+  passwordConfirm: string; // Include this if you registered a confirm field
+}
+
 function UpdatePasswordForm() {
-  const { register, handleSubmit, formState, getValues, reset } = useForm();
+  const { register, handleSubmit, formState, getValues, reset } =
+    useForm<PasswordFormInputs>();
   const { errors } = formState;
 
   const { updateUser, isUpdating } = useUpdateUser();
 
-  function onSubmit({ password }) {
-    updateUser({ password }, { onSuccess: reset });
+  function onSubmit({ password }: { password: string }) {
+    updateUser({ password }, { onSuccess: () => reset() });
   }
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow
-        label="Password (min 8 characters)"
+        label=" New Password (min 8 chars)"
         error={errors?.password?.message}
       >
         <Input
@@ -63,7 +69,7 @@ function UpdatePasswordForm() {
       </FormRow>
       <FormRow>
         <Actions>
-          <Button onClick={reset} type="reset" variation="secondary">
+          <Button onClick={() => reset()} type="reset" variation="secondary">
             Cancel
           </Button>
           <Button disabled={isUpdating}>Update password</Button>
