@@ -17,7 +17,7 @@ type BookingSummary = {
   totalPrice: number;
 };
 
-type ConfirmedStay = {
+export type ConfirmedStay = {
   cabinId?: number;
   cabinPrice?: number;
   created_at?: string;
