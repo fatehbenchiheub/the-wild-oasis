@@ -16,6 +16,7 @@ import useCheckout from './useChekout';
 import Modal from '../../ui/Modal';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import useDeleteBooking from './useDeleteBooking';
+import Empty from '../../ui/Empty';
 //import { HiArrowUpOnSquare } from 'react-icons/hi2';
 
 const HeadingGroup = styled.div`
@@ -39,7 +40,8 @@ function BookingDetail() {
   const { isDeleting, deleteBookingRow } = useDeleteBooking();
 
   if (isPending) return <Spinner />;
-  if (!booking) return <p>Booking not found.</p>;
+  if (!booking) return <Empty resourceName="booking" />;
+  /*<p>Booking not found.</p>*/
 
   const { status, id: bookingId } = booking;
   const tagColor = statusToTagName[status] ?? 'silver';

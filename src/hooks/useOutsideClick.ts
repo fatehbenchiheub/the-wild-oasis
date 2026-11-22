@@ -12,7 +12,7 @@ function useOutsideClick<T extends HTMLElement = HTMLDivElement>(
           closeHandler();
       }
 
-      document.addEventListener('click', handleClick, true);
+      document.addEventListener('click', handleClick, false);
 
       return () => document.removeEventListener('click', handleClick, true);
     },
